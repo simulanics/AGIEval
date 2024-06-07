@@ -15,7 +15,7 @@ def extract_last_line(string):
 
 
 def remove_few_shot_prefix(string:str):
-    prefix_list = ["The answer is therefore", "答案是"]
+    prefix_list = ["The answer is therefore", "答案是", "The answer is"]
     for prefix in prefix_list:
         if string.startswith(prefix):
             string = string[len(prefix):].strip()
@@ -91,9 +91,9 @@ def extract_answer_in_bracket(answer, prefix='【', suffix='】'):
 def parse_math_answer(setting_name, raw_string):
     if setting_name == "few-shot-CoT":
         raw_string = extract_last_line(raw_string)
-    if setting_name == "few-shot-CoT" or setting_name == "few-shot":
-        raw_string = remove_few_shot_prefix(raw_string)
-        return raw_string
+    # if setting_name == "few-shot-CoT" or setting_name == "few-shot":
+    #     raw_string = remove_few_shot_prefix(raw_string)
+    #     return raw_string
 
     def remove_boxed(s):
         left = "\\boxed{"
@@ -147,8 +147,8 @@ def parse_math_answer(setting_name, raw_string):
         last_match = None
         if "=" in s:
             last_match = s.split("=")[-1].lstrip(" ").rstrip(".")
-            if "\\n" in last_match:
-                last_match = last_match.split("\\n")[0]
+            if "\\" in last_match:
+                last_match = last_match.split("\\")[0]
         else:
             pattern = "(?:\\$)?\d+(?:\.\d+)?(?![\w\d])"
             matches = re.findall(pattern, s)

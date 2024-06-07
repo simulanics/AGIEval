@@ -27,19 +27,21 @@ def save_jsonl(lines, directory):
 
 
 def extract_answer(js):
+    # print("type(js):", type(js))
     try:
         if js is None or js == 'null':
+            # print("js is None or 'null'", js)
             return ""
         answer = ""
         if isinstance(js, str):
             answer = js
-        elif 'text' in js["choices"][0]:
+        elif 'text' in js.choices[0]:
             answer = js["choices"][0]["text"]
         else:
-            answer = js['choices'][0]['message']['content']
+            answer = js.choices[0].message.content
             # answer = js['']
         return answer
     except Exception as e:
-        # print(e)
-        # print(js)
+        print(e)
+        print(js)
         return ""
