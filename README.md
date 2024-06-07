@@ -8,7 +8,7 @@ For a full description of the benchmark, please refer to our paper: [AGIEval: A 
 Evaluating Foundation Models](https://arxiv.org/pdf/2304.06364.pdf).
 
 # Tasks and Data
-[We have updated the dataset to version 1.1.](data/v1_1) The new version updated Chinese Gaokao (chemistry, biology, physics) datasets with questions from 2023 and resolved formatting issues. To facilitate evaluation, now all multi-choice question (MCQ tasks have one answer only (Gaokao-Physics and JEC-QA used to have multi-label answers). AGIEval-en datasets remain the same as Verison 1.0. The new version's statistics are as follows:
+[We have updated the dataset to version 1.1.](data/v1_1) The new version updated Chinese Gaokao (chemistry, biology, physics) datasets with questions from 2023 and addressed annotation issues. To facilitate evaluation, now all multi-choice question (MCQ) tasks have one answer only (Gaokao-Physics and JEC-QA used to have multi-label answers). AGIEval-en datasets remain the same as Verison 1.0. The new version's statistics are as follows:
 
 AGIEval v1.1 contains 20 tasks, including 18 MCQ tasks and two cloze tasks (Gaokao-Math-Cloze and MATH). You can find the full list of tasks in the table below.
 ![The datasets used in AGIEVal](AGIEval_tasks.png)
@@ -35,6 +35,7 @@ We provide the prompts for few-shot learning in the [data/few_shot_prompts](data
 # Baseline Systems
 We evaluate the performance of the baseline systems (gpt-3.5-turbo and GPT-4o) on AGIEval v1.1 .
 The few-shot and few-shot-CoT results are as follows:
+
 ![The datasets used in AGIEVal](gpt_results.png)
 
 You can replicate the results by following the steps below:
@@ -44,7 +45,7 @@ You can replicate the results by following the steps below:
 # Evaluation
 You can run the [post_process_and_evaluation.py](post_process_and_evaluation.py) file to get the evaluation results.
 # Leaderboard
-We report the leaderboard on AGIEval v1.1. The leaderboard contains two subsets AGIEval-en and AGIEval-zh. Models are evaluated in few-shot setting. The two subset leaderboards contain only MCQ tasks. The leaderboard is as follows:
+We report the leaderboard on AGIEval v1.1. The leaderboard contains two subsets AGIEval-en and AGIEval-zh. The two subset leaderboards contain only MCQ tasks. The leaderboard is as follows:
 
 ## AGIEval-en few-shot
 
