@@ -90,12 +90,24 @@ We report the leaderboard on AGIEval v1.1. The leaderboard contains two subsets 
 
 
 ## AGIEval-all zero-shot
+(Asterisk sign indicates results reported for AGIEval v1.0.)
 
 | Model            | Source                                                   | Average |
 |------------------|----------------------------------------------------------|---------|
 | GPT-4o           | [Link](https://github.com/ruixiangcui/AGIEval)           | 62.3    |
+| InternLM2-20B*   | [Link](https://arxiv.org/pdf/2403.17297)                 | 53.0    |
+| Qwen-14B*        | [Link](https://arxiv.org/pdf/2403.17297)                 | 52.0    |
+| Phi-3-medium 14b*| [Link](https://arxiv.org/pdf/2404.14219)                 | 50.2    |
+| InternLM2-Chat-7B-SFT*| [Link](https://arxiv.org/pdf/2403.17297)            | 49.0    |
 | GPT-3.5-Turbo    | [Link](https://github.com/ruixiangcui/AGIEval)           | 46.0    |
-
+| Qwen-7B*         | [Link](https://arxiv.org/pdf/2403.17297)                 | 45.6    |
+| Mixtral 8x7b*    | [Link](https://arxiv.org/pdf/2404.14219)                 | 45.2    |
+| Phi-3-small 7b*  | [Link](https://arxiv.org/pdf/2404.14219)                 | 45.1    |
+| Gemma 7b*        | [Link](https://arxiv.org/pdf/2404.14219)                 | 42.1    |
+| Llama-3-In*      | [Link](https://arxiv.org/pdf/2404.14219)                 | 42.0    |
+| Phi-3-mini 3.8b* | [Link](https://arxiv.org/pdf/2404.14219)                 | 37.5    |
+| Mistral 7b*      | [Link](https://arxiv.org/pdf/2404.14219)                 | 35.1    |
+| Phi-2 2.7b*      | [Link](https://arxiv.org/pdf/2404.14219)                 | 29.8    |
 
 # Citation
 If you use AGIEval benchmark or the code in your research, please cite our paper:
