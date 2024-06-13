@@ -10,9 +10,9 @@ Evaluating Foundation Models](https://arxiv.org/pdf/2304.06364.pdf).
 # Tasks and Data
 
 AGIEval v1.0 contains 20 tasks, including two cloze tasks (Gaokao-Math-Cloze and MATH) and 18 multi-choice question answering tasks (the rest). Among the multi-choice question answering tasks, Gaokao-physics and JEC-QA have one or more answers, and the other tasks only have one answer. You can find the full list of tasks in the table below.
-![The datasets used in AGIEVal](AGIEval_tasks.png)
+![The datasets used in AGIEVal](../../AGIEval_tasks.png)
 
-You can download all post-processed data in the [data/v1](data/v1) folder. All usage of the data should follow the license of the original datasets. We provide the citation information of the original datasets in the Citation section below. 
+You can download all post-processed data in the [data/v1]() folder. All usage of the data should follow the license of the original datasets. We provide the citation information of the original datasets in the Citation section below. 
 
 The data format for all datasets is as follows:
 ```
@@ -30,17 +30,17 @@ The data format for all datasets is as follows:
 ```
 The `passage` field is available for gaokao-chinese, gaokao-english, both of logiqa, all of LSAT, and SAT. The answer for multi-choice tasks is saved in the `label` field. The answer for cloze tasks is saved in the `answer` field. 
 
-We provide the prompts for few-shot learning in the [data/v1/few_shot_prompts](data/few_shot_prompts.csv) file.
+We provide the prompts for few-shot learning in the [data/v1/few_shot_prompts](../few_shot_prompts.csv) file.
 # Baseline Systems
 We evaluate the performance of the baseline systems on AGIEval v1.0. The baseline systems are based on the following models: text-davinci-003, ChatGPT (gpt-3.5-turbo), and GPT-4.
 You can replicate the results by following the steps below:
-1. fill in your OpenAI API key in the [openai_api.py](openai_api.py) file.
-2. run the [run_prediction.py](run_prediction.py) file to get the results.
+1. fill in your OpenAI API key in the [openai_api.py](../../openai_api.py) file.
+2. run the [run_prediction.py](../../run_prediction.py) file to get the results.
 
 # Model Outputs
 You can download the zero-shot, zero-shot-Chain-of-Thought, few-shot and few-shot-Chain-of-Thought outputs of the baseline systems for the first version of AGIEval in the [Onedrive](https://1drv.ms/u/s!Amt8n9AJEyxcg8YQKFm1rSEyV9GU_A?e=VEfJVS) link. 
 # Evaluation
-You can run the [post_process_and_evaluation.py](post_process_and_evaluation.py) file to get the evaluation results.
+You can run the [post_process_and_evaluation.py](../../post_process_and_evaluation.py) file to get the evaluation results.
 # Leaderboard
 Thanks to OpenCompass who collects the results of multiple models on AGIEval, you can refer to the [leaderboard](https://opencompass.org.cn/dataset-detail/AGIEval) for the latest results.
 # Citation

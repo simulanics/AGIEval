@@ -33,8 +33,8 @@ The `passage` field is available for gaokao-chinese, gaokao-english, both of log
 
 We provide the prompts for few-shot learning in the [data/few_shot_prompts](data/few_shot_prompts.csv) file.
 # Baseline Systems
-We evaluate the performance of the baseline systems (gpt-3.5-turbo and GPT-4o) on AGIEval v1.1 .
-The few-shot and few-shot-CoT results are as follows:
+We evaluate the performance of the baseline systems (gpt-3.5-turbo and GPT-4o) on AGIEval v1.1.
+The results are as follows:
 
 ![The datasets used in AGIEVal](gpt_results.png)
 
@@ -74,12 +74,27 @@ We report the leaderboard on AGIEval v1.1. The leaderboard contains two subsets 
 | GPT-4o           | [Link](https://github.com/ruixiangcui/AGIEval)           | 69.0    |
 | GPT-3.5-Turbo    | [Link](https://github.com/ruixiangcui/AGIEval)           | 47.2    |
 
+## AGIEval-en zero-shot
+
+| Model            | Source                                                   | Average |
+|------------------|----------------------------------------------------------|---------|
+| GPT-4o           | [Link](https://github.com/ruixiangcui/AGIEval)           | 65.2    |
+| GPT-3.5-Turbo    | [Link](https://github.com/ruixiangcui/AGIEval)           | 54.1    |
+
+## AGIEval-zh zero-shot
+
+| Model            | Source                                                   | Average |
+|------------------|----------------------------------------------------------|---------|
+| GPT-4o           | [Link](https://github.com/ruixiangcui/AGIEval)           | 63.3    |
+| GPT-3.5-Turbo    | [Link](https://github.com/ruixiangcui/AGIEval)           | 45.0    |
+
+
 ## AGIEval-all zero-shot
 
 | Model            | Source                                                   | Average |
 |------------------|----------------------------------------------------------|---------|
-| GPT-4o           | [Link](https://github.com/ruixiangcui/AGIEval)           | /       |
-| GPT-3.5-Turbo    | [Link](https://github.com/ruixiangcui/AGIEval)           | /       |
+| GPT-4o           | [Link](https://github.com/ruixiangcui/AGIEval)           | 62.3    |
+| GPT-3.5-Turbo    | [Link](https://github.com/ruixiangcui/AGIEval)           | 46.0    |
 
 
 # Citation
