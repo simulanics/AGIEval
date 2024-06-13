@@ -4,24 +4,23 @@
 import openai_api
 from src import utils, dataset_loader
 import os
-import openai
-
+from dataclasses import asdict
+import json
 
 def query_openai(context_list, setting_name, n_multiply=3):
     n = len(openai_api.API_name_key_list) * n_multiply
-    try:
-        print("multi-thread n =", n)
-        if setting_name == 'complete':
-            results = openai_api.multi_threading_running(
-                openai_api.query_azure_openai_complete, context_list, n=n)
-        else:
-            results = openai_api.multi_threading_running(
-                openai_api.query_azure_openai_chat, context_list, n=n)
-    except openai.error.APIConnectionError as e:
-        print("found error:", e)
-        return query_openai(context_list, setting_name, max(max(n_multiply-5, n_multiply//2), 1))
-    return results
+    print("multi-thread n =", n)
+    if setting_name == 'complete':
+        results = openai_api.multi_threading_running(
+            openai_api.query_azure_openai_complete, context_list, n=n)
+    else:
+        results = openai_api.multi_threading_running(
+            openai_api.query_azure_openai_chat, context_list, n=n)
 
+    # except openai.error.APIConnectionError as e:
+    #     print("found error:", e)
+    #     return query_openai(context_list, setting_name, max(max(n_multiply-5, n_multiply//2), 1))
+    return results
 
 def query_openai_with_retry(context_list, setting_name, retry_time=4, results=None):
     if results is None:
@@ -36,6 +35,7 @@ def query_openai_with_retry(context_list, setting_name, retry_time=4, results=No
             break
 
         filtered_results = query_openai(filtered_context_list, setting_name)
+        print("filtered_results in query_openai_with_retry:", filtered_results)
 
         p = 0
         for i in range(len(results)):
@@ -55,6 +55,8 @@ def query_openai_with_retry(context_list, setting_name, retry_time=4, results=No
     assert len(results) == len(context_list)
     return results
 
+def chat_completion_to_json(chat_completion):
+    return json.dumps(asdict(chat_completion), ensure_ascii=False, indent=4)
 
 def run_multiple_dataset_batch(work_items):
     if len(work_items) == 0:
@@ -70,7 +72,8 @@ def run_multiple_dataset_batch(work_items):
         item_list += content_list
 
     results = query_openai_with_retry(context_list=item_list, setting_name=work_items[0][2])
-
+    results = [utils.extract_answer(item) for item in results]
+    print("results:", results)
     s = 0
     for i in range(len(dataset_list)):
         utils.save_jsonl(results[s:s + dataset_list[i]], work_items[i][1])
@@ -82,7 +85,7 @@ def run_multiple_dataset(work_items):
     batch = []
     count = 0
     batch_size = 1000
-    if openai_api.default_engine == 'gpt-4':
+    if openai_api.default_engine == 'gpt-35-turbo':
         batch_size = 500
     for item in work_items:
         if os.path.exists(item[1]):
@@ -100,10 +103,10 @@ def run_multiple_dataset(work_items):
 
 if __name__ == "__main__":
     run_experiment = True
-    dataset_dir = "data/v1"
+    dataset_dir = "data/v1_1"
     raw_prompt_path = "./data/few_shot_prompts.csv"
-    output_dir = "./outputs/davinci-003"
-    gpt_model = "davinci-003"
+    output_dir = "outputs/gpt-35-turbo"
+    gpt_model = "gpt-35-turbo"
     openai_api.default_engine = gpt_model
     os.makedirs(os.path.join(output_dir, "inputs"), exist_ok=True)
     os.makedirs(os.path.join(output_dir, "outputs"), exist_ok=True)
@@ -119,8 +122,10 @@ if __name__ == "__main__":
         "gaokao-mathqa",
         "gaokao-english",
         "sat-math",
-        "sat-en", "aqua-rat",
-        "lsat-ar", "lsat-lr", "lsat-rc",
+        "sat-en",
+        "aqua-rat",
+        "lsat-ar",
+        "lsat-lr", "lsat-rc",
         "logiqa-en", "logiqa-zh",
         "gaokao-mathcloze",
         "jec-qa-kd", "jec-qa-ca",
@@ -128,13 +133,14 @@ if __name__ == "__main__":
         "sat-en-without-passage",
     ]
     setting_name_list = [
-        # 'few-shot', 'few-shot-CoT',
+        # 'few-shot',
+        # 'few-shot-CoT',
         'zero-shot',
-        'zero-shot-CoT'
+        # 'zero-shot-CoT'
     ]
     skip_stage_1 = False
-    skip_stage_2 = True
-    skip_stage_3 = False
+    skip_stage_2 = False
+    skip_stage_3 = True
 
     chat_mode = True
     work_items = []
@@ -188,11 +194,11 @@ if __name__ == "__main__":
             utils.save_jsonl(second_stage_input, second_stage_input_path)
             work_items.append((second_stage_input_path, output_path, 'chat', len(dataset)))
     if not skip_stage_2:
-        openai_api.default_engine = "chatgpt"
+        openai_api.default_engine = "gpt-35-turbo"
         run_multiple_dataset(work_items)
 
     if not skip_stage_3:
-        openai_api.default_engine = "chatgpt"
+        openai_api.default_engine = "gpt-35-turbo"
         wrong_dataset_name_setting_name_list = [
             ("aqua-rat", "few-shot-CoT"),
             ("math", "few-shot"),

@@ -7,9 +7,10 @@ import os
 
 
 if __name__ == "__main__":
-    dataset_dir = "data/v1"
+    dataset_dir = "data/v1_1"
     raw_prompt_path = "./data/few_shot_prompts.csv"
-    gpt_model = 'davinci-003'
+    # gpt_model = 'gpt-35-turbo'
+    gpt_model = 'gpt-4o'
     output_dir = "./outputs/{}".format(gpt_model)
     chat_mode = True
 
@@ -21,7 +22,7 @@ if __name__ == "__main__":
         "aqua-rat",
         "math",
         "logiqa-en", "logiqa-zh",
-         "jec-qa-kd", "jec-qa-ca",
+        "jec-qa-kd", "jec-qa-ca",
         "lsat-ar", "lsat-lr", "lsat-rc",
         "sat-math", "sat-en",
         "sat-en-without-passage",
@@ -32,18 +33,38 @@ if __name__ == "__main__":
         "gaokao-mathqa",
         "gaokao-mathcloze",
     ]
+
+    english_qa_dataset_name_list = [
+        "aqua-rat",
+        "logiqa-en",
+        "lsat-ar", "lsat-lr", "lsat-rc",
+        "sat-math", "sat-en",
+        "sat-en-without-passage",
+    ]
+
+    chinese_qa_dataset_name_list = [
+        "logiqa-zh",
+        "jec-qa-kd", "jec-qa-ca",
+        "gaokao-chinese",
+        "gaokao-english",
+        "gaokao-geography", "gaokao-history",
+        "gaokao-biology", "gaokao-chemistry", "gaokao-physics",
+        "gaokao-mathqa",
+    ]
+
     setting_name_list = [
         'zero-shot',
-        'zero-shot-CoT',
-        'few-shot',
-        'few-shot-CoT',
+        # 'zero-shot-CoT',
+        # 'few-shot',
+        # 'few-shot-CoT',
     ]
 
     sum_list = [0] * len(setting_name_list)
-
+    english_qa_model_results = {}
+    chinese_qa_model_results = {}
     print("\t" + "\t".join(setting_name_list))
-
     for dataset_name in dataset_name_list:
+        model_results = {}
         accuracy_list = []
         for setting_id, setting_name in enumerate(setting_name_list):
             dataset = dataset_loader.load_dataset(
@@ -78,7 +99,8 @@ if __name__ == "__main__":
             for i in range(len(result_for_human)):
                 result_for_human[i].model_input = dataset[i]["context"]
                 result_for_human[i].model_output = utils.extract_answer(output_jsons[i])
-                result_for_human[i].parse_result = post_process.post_process(dataset_name, setting_name, result_for_human[i].model_output)
+                result_for_human[i].parse_result = post_process.post_process(dataset_name, setting_name,
+                                                                             result_for_human[i].model_output)
                 result_for_human[i].is_correct = evaluation.evaluate_single_sample(
                     dataset_name, result_for_human[i].parse_result, result_for_human[i].label)
                 if 'zero-shot' in setting_name:
@@ -89,7 +111,7 @@ if __name__ == "__main__":
                 correct_format = 0
                 for i in range(len(result_for_human)):
                     if post_process.try_parse_few_shot_pattern(
-                        result_for_human[i].model_output, dataset_name, setting_name):
+                            result_for_human[i].model_output, dataset_name, setting_name):
                         correct_format += 1
                 correct_ratio = correct_format / len(result_for_human)
             correct_numer = len([item for item in result_for_human if item.is_correct])
@@ -97,7 +119,35 @@ if __name__ == "__main__":
             accuracy_list.append("{0:.2%}".format(accuracy))
             sum_list[setting_id] += accuracy
         print("\t".join([dataset_name] + accuracy_list))
+        model_results[dataset_name] = accuracy_list[0]
+        if dataset_name in english_qa_dataset_name_list:
+            english_qa_model_results[dataset_name] = accuracy_list
+        elif dataset_name in chinese_qa_dataset_name_list:
+            chinese_qa_model_results[dataset_name] = accuracy_list
+
     average_list = []
     for item in sum_list:
-        average_list.append("{0:.2%}".format(item/len(dataset_name_list)))
-    print("\t".join(["average"] + average_list))
+        average_list.append("{0:.2%}".format(item / len(dataset_name_list)))
+    print("\t".join(["average for all datasets"] + average_list))
+
+    # average accuracy for English QA datasets
+    sum_list = [0] * len(setting_name_list)
+    for dataset_name in english_qa_dataset_name_list:
+        for setting_id, setting_name in enumerate(setting_name_list):
+            if setting_name in ['zero-shot', 'zero-shot-CoT', 'few-shot', 'few-shot-CoT']:
+                sum_list[setting_id] += float(english_qa_model_results[dataset_name][setting_id][:-1])
+    average_list = []
+    for item in sum_list:
+        average_list.append("{0:.2%}".format(item / len(english_qa_dataset_name_list) * 0.01))
+    print("\t".join(["average for English multi choice QA"] + average_list))
+
+    # average accuracy for Chinese QA datasets
+    sum_list = [0] * len(setting_name_list)
+    for dataset_name in chinese_qa_dataset_name_list:
+        for setting_id, setting_name in enumerate(setting_name_list):
+            if setting_name in ['zero-shot', 'zero-shot-CoT', 'few-shot', 'few-shot-CoT']:
+                sum_list[setting_id] += float(chinese_qa_model_results[dataset_name][setting_id][:-1])
+    average_list = []
+    for item in sum_list:
+        average_list.append("{0:.2%}".format(item / len(chinese_qa_dataset_name_list) * 0.01))
+    print("\t".join(["average for Chinese multi choice QA"] + average_list))

@@ -39,8 +39,8 @@ The results are as follows:
 ![The datasets used in AGIEVal](gpt_results.png)
 
 You can replicate the results by following the steps below:
-1. fill in your OpenAI API key in the [openai_api.py](openai_api.py) file.
-2. run the [run_prediction.py](run_prediction.py) file to get the results.
+1. Update your OpenAI API in the [openai_api.py](openai_api.py) file.
+2. run the [run_prediction.py](run_prediction.py) script to get the results.
 
 # Evaluation
 You can run the [post_process_and_evaluation.py](post_process_and_evaluation.py) file to get the evaluation results.
